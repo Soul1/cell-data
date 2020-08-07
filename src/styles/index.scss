@@ -1,0 +1,36 @@
+@import '~gridjs/dist/theme/mermaid.min.css';
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+body {
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+ul, li {
+  list-style: none;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  color: #000;
+}
