@@ -10,21 +10,31 @@ const GridTable: FunctionalComponent<TProps> = ({dataArr}) => {
 
   const wrapperRef = useRef(null)
 
-  const grid = new Grid({
-    search: true,
-    data: dataArr,
-    pagination: {
-      enabled: true,
-      limit: 10,
-      summary: false
-    },
-    className: {
-      container: 'container',
-      td: 'td',
-    }
-  })
-
   useEffect(() => {
+    const grid = new Grid({
+      search: true,
+      language: {
+        'search': {
+          'placeholder': '🔍 Поиск...'
+        },
+        'pagination': {
+          'previous': '⬅️',
+          'next': '➡️',
+          'showing': '😃 Displaying',
+          'results': () => 'Records'
+        }
+      },
+      data: dataArr,
+      pagination: {
+        enabled: true,
+        limit: 10,
+        summary: false
+      },
+      className: {
+        container: 'container',
+        td: 'td',
+      }
+    })
     grid.render(wrapperRef.current)
   }, [])
 
