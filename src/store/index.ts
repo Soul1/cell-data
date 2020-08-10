@@ -2,7 +2,7 @@ import createStore from 'unistore'
 
 export const actions = {
   setDataArr: async () => {
-    return {dataArr: await fetch('/data.json').then(r => r.json()).then(r => r)}
+    return {dataArr: await fetch('/data.json').then(r => r.json())}
   }
 }
 
