@@ -1,30 +1,32 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useRef} from 'preact/hooks'
 import {Grid} from 'gridjs'
+import {TDataArr} from '../../store'
+
+import 'gridjs/dist/theme/mermaid.min.css'
+import './index.scss'
 
 type TProps = {
-  dataArr: []
+  dataArr: TDataArr
+  setCell: () => void
 }
 
 const GridTable: FunctionalComponent<TProps> = ({dataArr}) => {
-
   const wrapperRef = useRef(null)
 
   useEffect(() => {
     const grid = new Grid({
+      data: dataArr,
       search: true,
       language: {
-        'search': {
-          'placeholder': '🔍 Поиск...'
+        search: {
+          placeholder: '🔍 Поиск...'
         },
-        'pagination': {
-          'previous': '⬅️',
-          'next': '➡️',
-          'showing': '😃 Displaying',
-          'results': () => 'Records'
+        pagination: {
+          previous: '⬅️',
+          next: '➡️'
         }
       },
-      data: dataArr,
       pagination: {
         enabled: true,
         limit: 10,
@@ -34,8 +36,7 @@ const GridTable: FunctionalComponent<TProps> = ({dataArr}) => {
         container: 'container',
         td: 'td',
       }
-    })
-    grid.render(wrapperRef.current)
+    }).render(wrapperRef.current)
   }, [])
 
   return <div ref={wrapperRef}/>
