@@ -3,3 +3,14 @@
   display: block;
   width: 1200px !important;
 }
+
+button.gridjs-sort-neutral {
+  background-position: center;
+}
+
+button.gridjs-sort-asc {
+  background-position: center top;
+}
+button.gridjs-sort-desc {
+  background-position: center bottom;
+}
