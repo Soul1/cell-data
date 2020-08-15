@@ -1,4 +1,8 @@
 node_modules
-dist
+dist/src.f69400ca.js.map
+dist/src.f69400ca.css.map
+dist/index.html
+dist/src.f69400ca.js
+dist/src.f69400ca.css
 .cache
 .idea
