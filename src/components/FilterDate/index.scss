@@ -1,0 +1,22 @@
+
+.filter-date {
+  position: absolute;
+  left: 50px;
+  top: 15px;
+  display: flex;
+  z-index: 5;
+
+  &__to {
+    b {
+      margin-right: 10px;
+    }
+  }
+
+  &__after {
+    margin-left: 30px;
+
+    b {
+      margin-right: 10px;
+    }
+  }
+}
