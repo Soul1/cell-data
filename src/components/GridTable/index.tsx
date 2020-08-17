@@ -8,15 +8,16 @@ import './index.scss'
 
 type TProps = {
   dataArr: TDataArr
+  filterDateDataArr: TDataArr
   setRows: (rows: TRows) => void
 }
 
-const GridTable: FunctionalComponent<TProps> = ({dataArr, setRows}) => {
+const GridTable: FunctionalComponent<TProps> = ({dataArr, setRows, filterDateDataArr}) => {
   const wrapperRef = useRef(null)
 
   useEffect(() => {
     const grid = new Grid({
-      data: dataArr,
+      data: !!filterDateDataArr ? filterDateDataArr : dataArr,
       search: true,
       sort: true,
       language: {
