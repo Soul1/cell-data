@@ -1,30 +1,14 @@
 import {h, FunctionalComponent} from 'preact'
+import {StateUpdater} from 'preact/hooks'
 
 import './index.scss'
-import {TDataArr} from '../../store'
-import {useEffect, useState} from 'preact/hooks'
 
 type TProps = {
-  dataArr: TDataArr
-  setFilterDateDataArr: (filterDateDataArr: TDataArr) => void
+  setDateTo: StateUpdater<Date>
+  setDateAfter: StateUpdater<Date>
 }
 
-const FilterDate: FunctionalComponent<TProps> = ({dataArr, setFilterDateDataArr}) => {
-  const [dateTo, setDateTo] = useState<null | Date>(null)
-  const [dateAfter, setDateAfter] = useState<null | Date>(null)
-
-  const resultFilterData: any = !!dataArr && !!dateTo && !!dateAfter ? dataArr.filter(a => {
-      const date = new Date(a.ctime)
-      return (date >= dateTo && date <= dateAfter)
-    }) : dataArr
-
-  useEffect(() => {
-    if (resultFilterData !== null && resultFilterData.length > 0 && resultFilterData !== dataArr) {
-      setFilterDateDataArr(resultFilterData)
-    }
-  }, [resultFilterData])
-
-  console.log(resultFilterData, 1)
+const FilterDate: FunctionalComponent<TProps> = ({setDateTo, setDateAfter}) => {
 
   return (
     <div class='filter-date'>
