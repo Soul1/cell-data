@@ -35,8 +35,14 @@ a {
 
 .app {
   display: flex;
+  position: relative;
+  margin-top: 10px;
 }
 
 .gridjs-wrapper {
   overflow-x: hidden;
+}
+
+.gridjs-search {
+  float: right;
 }
