@@ -25,10 +25,14 @@ export const actions = {
   },
   setRows: (state: any, rows: TRows) => {
     return {rows}
+  },
+  setFilterDateDataArr: (state: any, filterDateDataArr: TDataArr) => {
+    console.log(filterDateDataArr, 'yeh')
+    return {filterDateDataArr}
   }
 }
 
-const store = createStore({dataArr: null, rows: null})
+const store = createStore({dataArr: null, rows: null, filterDateDataArr: null})
 
 export default store
 
