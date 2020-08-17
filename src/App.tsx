@@ -1,5 +1,5 @@
 import {h, FunctionalComponent} from 'preact'
-import {useEffect} from 'preact/hooks'
+import {useEffect, useState} from 'preact/hooks'
 import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
 import {actions, TDataArr, TRows} from './store'
@@ -16,12 +16,27 @@ type TProps = {
 }
 
 const App: FunctionalComponent<TProps> = ({setRows, setDataArr, setFilterDateDataArr, dataArr, filterDateDataArr, rows}) => {
+  const [dateTo, setDateTo] = useState<null | Date>(null)
+  const [dateAfter, setDateAfter] = useState<null | Date>(null)
+  const [resultFilterData, setResultFilterData] = useState<null | TDataArr>(null)
+
+    !!dateTo && !!dateAfter ? setResultFilterData(dataArr.filter(a => {
+      const date = new Date(a.ctime)
+      return (date >= dateTo && date <= dateAfter)}
+      )) : dataArr
+
+  useEffect(() => {
+    if (resultFilterData !== null && resultFilterData.length > 0 && resultFilterData !== dataArr) {
+      setFilterDateDataArr(resultFilterData)
+    }
+  }, [resultFilterData])
 
   useEffect(() => setDataArr(), [])
+
   return (
     <div class='app'>
       <div className='main-table'>
-        <FilterDate dataArr={dataArr} setFilterDateDataArr={setFilterDateDataArr}/>
+        <FilterDate setDateTo={setDateTo} setDateAfter={setDateAfter}/>
         {!!dataArr ? <GridTable dataArr={dataArr} setRows={setRows} filterDateDataArr={filterDateDataArr}/> : 'Initializing'}
       </div>
       <div className='additional-table'>
