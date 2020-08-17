@@ -4,21 +4,25 @@ import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
 import {actions, TDataArr, TRows} from './store'
 import AdditionalTable from './components/AdditionalTable'
+import FilterDate from './components/FilterDate'
 
 type TProps = {
   setDataArr: () => void
   setRows: (row: TRows) => void
+  setFilterDateDataArr: (filterDateDataArr: TDataArr) => void
   dataArr: TDataArr
+  filterDateDataArr: TDataArr
   rows: TRows
 }
 
-const App: FunctionalComponent<TProps> = ({setRows, setDataArr, dataArr, rows}) => {
+const App: FunctionalComponent<TProps> = ({setRows, setDataArr, setFilterDateDataArr, dataArr, filterDateDataArr, rows}) => {
 
   useEffect(() => setDataArr(), [])
   return (
     <div class='app'>
       <div className='main-table'>
-        {!!dataArr ? <GridTable dataArr={dataArr} setRows={setRows}/> : 'Initializing'}
+        <FilterDate dataArr={dataArr} setFilterDateDataArr={setFilterDateDataArr}/>
+        {!!dataArr ? <GridTable dataArr={dataArr} setRows={setRows} filterDateDataArr={filterDateDataArr}/> : 'Initializing'}
       </div>
       <div className='additional-table'>
         {!!rows && <AdditionalTable rows={rows}/>}
@@ -27,4 +31,4 @@ const App: FunctionalComponent<TProps> = ({setRows, setDataArr, dataArr, rows}) 
   )
 }
 
-export default connect(['dataArr', 'rows'], actions)(App)
+export default connect(['dataArr', 'rows', 'filterDateDataArr'], actions)(App)
