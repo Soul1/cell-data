@@ -20,10 +20,10 @@ export type TData = {
 export type TDataArr = TData[] | null
 
 export const actions = {
-  setDataArr: async () => {
+  onDataArr: async () => {
     return {dataArr: await fetch('/data.json').then(r => r.json())}
   },
-  setRows: (state: any, rows: TRows) => {
+  onRows: (state: any, rows: TRows) => {
     return {rows}
   }
 }
