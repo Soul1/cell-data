@@ -46,3 +46,13 @@ a {
 .gridjs-search {
   float: right;
 }
+
+.gridjs-tr {
+  cursor: pointer;
+  &:hover {
+    .gridjs-td {
+      background-color: #bfffbf;
+    }
+  }
+}
+
