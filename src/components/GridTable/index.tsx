@@ -1,5 +1,5 @@
 import {h, FunctionalComponent} from 'preact'
-import {useEffect, useRef} from 'preact/hooks'
+import {useEffect, useRef, useState} from 'preact/hooks'
 import {Grid} from 'gridjs'
 import {TDataArr, TRows} from '../../store'
 
@@ -8,16 +8,16 @@ import './index.scss'
 
 type TProps = {
   dataArr: TDataArr
-  filterDateDataArr: TDataArr
-  setRows: (rows: TRows) => void
+  onRows: (rows: TRows) => void
 }
 
-const GridTable: FunctionalComponent<TProps> = ({dataArr, setRows, filterDateDataArr}) => {
+const GridTable: FunctionalComponent<TProps> = ({dataArr, onRows}) => {
   const wrapperRef = useRef(null)
+  const [gridObj, onGridObj] = useState(null)
 
   useEffect(() => {
     const grid = new Grid({
-      data: !!filterDateDataArr ? filterDateDataArr : dataArr,
+      data: dataArr,
       search: true,
       sort: true,
       language: {
@@ -32,9 +32,11 @@ const GridTable: FunctionalComponent<TProps> = ({dataArr, setRows, filterDateDat
       fixedHeader: true,
     }).render(wrapperRef.current)
 
-    grid.on('rowClick', (...args) => setRows(JSON.parse(JSON.stringify(args))))
-
+    grid.on('rowClick', (...args) => onRows(JSON.parse(JSON.stringify(args))))
+    onGridObj(grid)
   }, [])
+
+  useEffect(() => gridObj && gridObj.updateConfig({data: dataArr}).forceRender(), [dataArr])
 
   return <div ref={wrapperRef}/>
 
