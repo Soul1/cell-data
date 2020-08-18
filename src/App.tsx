@@ -1,43 +1,44 @@
 import {h, FunctionalComponent} from 'preact'
-import {useEffect, useState} from 'preact/hooks'
+import {useEffect, useMemo, useState} from 'preact/hooks'
 import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
 import {actions, TDataArr, TRows} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
 
+export type DateInterval  = {
+  to: Date | null
+  after: Date | null
+}
+
 type TProps = {
-  setDataArr: () => void
-  setRows: (row: TRows) => void
-  setFilterDateDataArr: (filterDateDataArr: TDataArr) => void
+  onDataArr: () => void
+  onRows: (rows: TRows) => void
   dataArr: TDataArr
-  filterDateDataArr: TDataArr
   rows: TRows
 }
 
-const App: FunctionalComponent<TProps> = ({setRows, setDataArr, setFilterDateDataArr, dataArr, filterDateDataArr, rows}) => {
-  const [dateTo, setDateTo] = useState<null | Date>(null)
-  const [dateAfter, setDateAfter] = useState<null | Date>(null)
-  const [resultFilterData, setResultFilterData] = useState<null | TDataArr>(null)
+const App: FunctionalComponent<TProps> = ({onRows, onDataArr, dataArr,  rows}) => {
 
-    !!dateTo && !!dateAfter ? setResultFilterData(dataArr.filter(a => {
-      const date = new Date(a.ctime)
-      return (date >= dateTo && date <= dateAfter)}
-      )) : dataArr
+  const [dateFilter, onDateFilter] = useState<DateInterval>({
+    to: null,
+    after: null
+  })
 
-  useEffect(() => {
-    if (resultFilterData !== null && resultFilterData.length > 0 && resultFilterData !== dataArr) {
-      setFilterDateDataArr(resultFilterData)
-    }
-  }, [resultFilterData])
+  useEffect(() => onDataArr(), [])
 
-  useEffect(() => setDataArr(), [])
+  const filteredData = useMemo(
+    () => dataArr && dataArr.filter(({ctime}) => {
+      const date = new Date(ctime)
+      return (!dateFilter.to || date >= dateFilter.to)
+        && (!dateFilter.after || date <= dateFilter.after)
+    }), [dataArr, dateFilter])
 
   return (
     <div class='app'>
       <div className='main-table'>
-        <FilterDate setDateTo={setDateTo} setDateAfter={setDateAfter}/>
-        {!!dataArr ? <GridTable dataArr={dataArr} setRows={setRows} filterDateDataArr={filterDateDataArr}/> : 'Initializing'}
+        <FilterDate onChange={onDateFilter}/>
+        {!!filteredData ? <GridTable dataArr={filteredData} onRows={onRows}/> : 'Initializing'}
       </div>
       <div className='additional-table'>
         {!!rows && <AdditionalTable rows={rows}/>}
@@ -46,4 +47,4 @@ const App: FunctionalComponent<TProps> = ({setRows, setDataArr, setFilterDateDat
   )
 }
 
-export default connect(['dataArr', 'rows', 'filterDateDataArr'], actions)(App)
+export default connect(['dataArr', 'rows'], actions)(App)
