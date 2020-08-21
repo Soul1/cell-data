@@ -5,10 +5,11 @@ import GridTable from './components/GridTable'
 import {actions, TDataArr, TRows} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
+import {Moment} from "moment";
 
 export type DateInterval  = {
-  to: Date | null
-  after: Date | null
+  to: Date | Moment | null
+  after: Date | Moment | null
 }
 
 type TProps = {
@@ -33,6 +34,7 @@ const App: FunctionalComponent<TProps> = ({onRows, onDataArr, dataArr,  rows}) =
       return (!dateFilter.to || date >= dateFilter.to)
         && (!dateFilter.after || date <= dateFilter.after)
     }), [dataArr, dateFilter])
+
 
   return (
     <div class='app'>
