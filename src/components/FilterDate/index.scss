@@ -2,21 +2,31 @@
 .filter-date {
   position: absolute;
   left: 50px;
-  top: 15px;
-  display: flex;
+  top: 12px;
   z-index: 5;
 
-  &__to {
-    b {
-      margin-right: 10px;
-    }
+  b {
+    margin-right: 10px;
+  }
+
+  &__set {
+    display: flex;
   }
 
   &__after {
     margin-left: 30px;
+  }
 
-    b {
+  &__frequently-used {
+    display: flex;
+    margin-top: 5px;
+    font-size: 16px;
+    div {
+      cursor: pointer;
       margin-right: 10px;
+      &:hover {
+        color: #a0c2ff;
+      }
     }
   }
 }
