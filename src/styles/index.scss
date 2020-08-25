@@ -33,6 +33,10 @@ a {
   color: #000;
 }
 
+span {
+  z-index: 10;
+}
+
 .app {
   display: flex;
   position: relative;
@@ -56,3 +60,7 @@ a {
   }
 }
 
+.sett {
+  padding: 50px;
+  background-color: #000;
+}
