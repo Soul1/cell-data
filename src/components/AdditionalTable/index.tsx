@@ -1,26 +1,24 @@
 import {h, FunctionalComponent} from 'preact'
-import {TRows} from '../../store'
+import {TRow} from '../../store'
 
 import './index.scss'
 
 type TProps = {
-  rows: TRows
+  row: TRow
 }
 
-const AdditionalTable: FunctionalComponent<TProps> = ({rows}) => {
-const dataName = ['id', 'Дата', 'Тип', 'Имя оператора', 'Оценка клиента', 'Комментарий']
+const AdditionalTable: FunctionalComponent<TProps> = ({row}) => {
+  const dataName = ['id', 'Дата', 'Тип', 'Имя оператора', 'Оценка клиента', 'Комментарий']
   return (
     <div class='add-table'>
       <div class='add-table__info'>
         {dataName.map(name => <div class='add-table__info-row'>{name}</div>)}
       </div>
       <div class='add-table__main'>
-        {rows[1]._cells.map( row => <div class='add-table__main-row'>{row.data}</div>)}
+        {row.cells.map(cell => <div class='add-table__main-row'>{cell.data}</div>)}
       </div>
     </div>
-
   )
-
 }
 
 export default AdditionalTable
