@@ -1,12 +1,7 @@
 import createStore from 'unistore'
+import Row from 'gridjs/dist/src/row'
 
-export type TRows = [
-  {isTrusted: boolean},
-  {
-    _cells: [{_id: string, data: string | number | boolean}],
-    _id: string
-  }
-] | null
+export type TRow = Row | null
 
 export type TData = {
   svcId: number,
@@ -20,15 +15,15 @@ export type TData = {
 export type TDataArr = TData[] | null
 
 export const actions = {
-  onDataArr: async () => {
+  setDataArr: async () => {
     return {dataArr: await fetch('/data.json').then(r => r.json())}
   },
-  onRows: (state: any, rows: TRows) => {
-    return {rows}
+  setRow: (state: any, row: TRow) => {
+    return {row}
   }
 }
 
-const store = createStore({dataArr: null, rows: null})
+const store = createStore({dataArr: null, row: null})
 
 export default store
 
