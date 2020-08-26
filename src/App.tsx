@@ -2,31 +2,33 @@ import {h, FunctionalComponent} from 'preact'
 import {useEffect, useMemo, useState} from 'preact/hooks'
 import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
-import {actions, TDataArr, TRows} from './store'
+import {actions, TDataArr, TRow} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
-import {Moment} from "moment";
+import {Moment} from 'moment'
+
+export type TForDate = Date | Moment | null
 
 export type DateInterval  = {
-  to: Date | Moment | null
-  after: Date | Moment | null
+  to: TForDate
+  after: TForDate
 }
 
 type TProps = {
-  onDataArr: () => void
-  onRows: (rows: TRows) => void
+  setDataArr: () => void
+  setRow: (row: TRow) => void
   dataArr: TDataArr
-  rows: TRows
+  row: TRow
 }
 
-const App: FunctionalComponent<TProps> = ({onRows, onDataArr, dataArr,  rows}) => {
+const App: FunctionalComponent<TProps> = ({setRow, setDataArr, dataArr,  row}) => {
 
-  const [dateFilter, onDateFilter] = useState<DateInterval>({
+  const [dateFilter, setDateFilter] = useState<DateInterval>({
     to: null,
     after: null
   })
 
-  useEffect(() => onDataArr(), [])
+  useEffect(() => setDataArr(), [])
 
   const filteredData = useMemo(
     () => dataArr && dataArr.filter(({ctime}) => {
@@ -39,14 +41,14 @@ const App: FunctionalComponent<TProps> = ({onRows, onDataArr, dataArr,  rows}) =
   return (
     <div class='app'>
       <div className='main-table'>
-        <FilterDate onChange={onDateFilter}/>
-        {!!filteredData ? <GridTable dataArr={filteredData} onRows={onRows}/> : 'Initializing'}
+        <FilterDate onChange={setDateFilter}/>
+        {!!filteredData ? <GridTable dataArr={filteredData} selected={row} onRow={setRow}/> : 'Initializing'}
       </div>
       <div className='additional-table'>
-        {!!rows && <AdditionalTable rows={rows}/>}
+        {!!row && <AdditionalTable row={row}/>}
       </div>
     </div>
   )
 }
 
-export default connect(['dataArr', 'rows'], actions)(App)
+export default connect(['dataArr', 'row'], actions)(App)
