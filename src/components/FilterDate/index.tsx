@@ -1,6 +1,6 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useState} from 'preact/hooks'
-import {DateInterval} from '../../App'
+import {DateInterval, TForDate} from '../../App'
 import moment from 'moment'
 
 import './index.scss'
@@ -10,8 +10,8 @@ type TProps = {
 }
 
 const FilterDate: FunctionalComponent<TProps> = ({onChange}) => {
-  const [dateTo, setDateTo] = useState<null | Date>(null)
-  const [dateAfter, setDateAfter] = useState<null | Date>(null)
+  const [dateTo, setDateTo] = useState<TForDate>(null)
+  const [dateAfter, setDateAfter] = useState<TForDate>(null)
 
   const lastWeekFilter = () => {
     onChange(
@@ -19,6 +19,8 @@ const FilterDate: FunctionalComponent<TProps> = ({onChange}) => {
         to: moment().subtract(1, 'week').startOf('week').day(1),
         after: moment().subtract(1, 'week').endOf('week').day(7)
       })
+    setDateTo(moment().subtract(1, 'week').startOf('week').day(1))
+    setDateAfter(moment().subtract(1, 'week').startOf('week').day(7))
   }
 
   useEffect(() =>
@@ -31,11 +33,11 @@ const FilterDate: FunctionalComponent<TProps> = ({onChange}) => {
       <div className="filter-date__set">
         <div className="filter-date__to">
           <b>От</b>
-          <input type="date" onChange={e => setDateTo(new Date(e.target.valueAsDate))}/>
+          <input type="date" onChange={e => setDateTo(new Date(e.target.valueAsDate))} value={dateTo && moment(dateTo).format('YYYY-MM-DD')}/>
         </div>
         <div className="filter-date__after">
           <b>До</b>
-          <input type="date" onChange={e => setDateAfter(new Date(e.target.valueAsDate))}/>
+          <input type="date" onChange={e => setDateAfter(new Date(e.target.valueAsDate))} value={dateAfter && moment(dateAfter).format('YYYY-MM-DD')}/>
         </div>
       </div>
       <div className="filter-date__frequently-used">
