@@ -1,39 +1,23 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useRef, useState} from 'preact/hooks'
-import {Grid, html} from 'gridjs'
-import {TDataArr, TRows} from '../../store'
+import {Grid} from 'gridjs'
+import {TDataArr, TRow} from '../../store'
 
 import 'gridjs/dist/theme/mermaid.min.css'
 import './index.scss'
 
 type TProps = {
   dataArr: TDataArr
-  onRows: (rows: TRows) => void
+  selected: TRow
+  onRow: (row: TRow) => void
 }
 
-const GridTable: FunctionalComponent<TProps> = ({dataArr, onRows}) => {
+const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
   const wrapperRef = useRef(null)
   const [gridObj, setGridObj] = useState(null)
-  const [t, setT] = useState(false)
-
-  const onC = () => {
-    setT(!t)
-    console.log(t)
-  }
 
   useEffect(() => {
     const grid = new Grid({
-      columns: [
-        {
-          name :'svcId',
-          formatter: (cell, row) => t ? <span onClick={() => setT(false)}>cell</span> : <span onClick={() => setT(true)}>{cell}</span>
-        },
-        'ctime',
-        'svcType',
-        'userName',
-        'feedback',
-        'comment',
-      ],
       data: dataArr,
       search: true,
       sort: true,
@@ -44,36 +28,28 @@ const GridTable: FunctionalComponent<TProps> = ({dataArr, onRows}) => {
       },
       className: {
         container: 'grid-container'
-      },
-      height: '90vh',
-      fixedHeader: true,
+      }
     }).render(wrapperRef.current)
 
-    grid.on('rowClick', (...args) => {
-      onRows(JSON.parse(JSON.stringify(args)))
-    })
-
+    grid.on('rowClick', (_, row) => onRow(row))
     setGridObj(grid)
 
   }, [])
 
-  useEffect(() => gridObj && gridObj.updateConfig({data: dataArr}).forceRender(), [dataArr])
+  useEffect(() => {
+    const formatter = (cell: string, row: TRow) =>
+      selected && selected.cells[0].data === row.cells[0].data
+        ? <strong>{cell}</strong>
+        : cell
 
-  useEffect(() => gridObj && gridObj.updateConfig(
-    {
-      columns: [
-        {
-          name :'svcId',
-          formatter: (cell, row) => t ? <span class='sett' onClick={() => setT(!t)}>cell</span> : <span onClick={() => setT(!t)}>{cell}</span>
-        },
-        {name: 'ctime'},
-        {name: 'svcType'},
-        {name: 'userName'},
-        {name: 'feedback'},
-        {name: 'comment'},
-      ],
-    }
-    ).forceRender(), [t])
+    const columns = [
+      'svcId', 'ctime', 'svcType',
+      'userName', 'feedback', 'comment',
+    ].map((name) => ({name, formatter}));
+
+    gridObj && gridObj.updateConfig({data: dataArr, columns}).forceRender()
+
+  }, [dataArr, selected])
 
   return <div ref={wrapperRef}/>
 
