@@ -16,9 +16,30 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
   const wrapperRef = useRef(null)
   const [gridObj, setGridObj] = useState(null)
 
+  const dataName = {
+    svcId: '№',
+    ctime: 'Дата',
+    svcType: 'Тип',
+    userName: 'Оператор',
+    feedback: 'Оценка',
+    comment: 'Комментарий'
+  }
+
+  const renameKeys = (obj: any, newKeys: any) => {
+    const keyValues = Object.keys(obj).map(key => {
+      const newKey = newKeys[key] || key
+      return { [newKey]: obj[key] }
+    })
+    return Object.assign({}, ...keyValues)
+  }
+
+  const dataKeysRename = () => {
+    return dataArr.map(obj => renameKeys(obj, dataName))
+  }
+
   useEffect(() => {
     const grid = new Grid({
-      data: dataArr,
+      data: dataKeysRename(),
       search: true,
       sort: true,
       language: {
@@ -33,7 +54,6 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
 
     grid.on('rowClick', (_, row) => onRow(row))
     setGridObj(grid)
-
   }, [])
 
   useEffect(() => {
@@ -42,12 +62,9 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
         ? <strong>{cell}</strong>
         : cell
 
-    const columns = [
-      'svcId', 'ctime', 'svcType',
-      'userName', 'feedback', 'comment',
-    ].map((name) => ({name, formatter}));
+    const columns = Object.values(dataName).map((name) => ({name, formatter}));
 
-    gridObj && gridObj.updateConfig({data: dataArr, columns}).forceRender()
+    gridObj && gridObj.updateConfig({data: dataKeysRename(), columns}).forceRender()
 
   }, [dataArr, selected])
 
