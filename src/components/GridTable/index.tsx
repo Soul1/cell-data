@@ -2,6 +2,7 @@ import {h, FunctionalComponent} from 'preact'
 import {useEffect, useRef, useState} from 'preact/hooks'
 import {Grid} from 'gridjs'
 import {TDataArr, TRow} from '../../store'
+import cn from 'classnames'
 
 import 'gridjs/dist/theme/mermaid.min.css'
 import './index.scss'
@@ -48,7 +49,7 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
         }
       },
       className: {
-        container: 'grid-container'
+        td: cn({'grid-td': dataArr.length})
       }
     }).render(wrapperRef.current)
 
@@ -64,7 +65,9 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
 
     const columns = Object.values(dataName).map((name) => ({name, formatter}));
 
-    gridObj && gridObj.updateConfig({data: dataKeysRename(), columns}).forceRender()
+    const className = {td: cn({'grid-td': dataArr.length})}
+    
+    gridObj && gridObj.updateConfig({data: dataKeysRename(), columns, className}).forceRender()
 
   }, [dataArr, selected])
 

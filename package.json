@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
-    "gridjs": "^1.15.1",
+    "@types/classnames": "^2.2.10",
+    "classnames": "^2.2.6",
+    "gridjs": "^1.16.0",
     "moment": "^2.27.0",
     "preact": "^10.4.7",
     "unistore": "^3.5.2"

@@ -52,13 +52,14 @@ span {
   float: right;
 }
 
-.gridjs-tr {
-  cursor: pointer;
-  &:hover {
-    .gridjs-td {
-      background-color: #bfffbf;
-    }
+.gridjs-tr:hover {
+  .grid-td {
+    background-color: #bfffbf;
   }
+}
+
+.grid-td {
+  cursor: pointer;
 }
 
 .sett {
