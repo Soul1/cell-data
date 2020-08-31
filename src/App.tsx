@@ -5,13 +5,13 @@ import GridTable from './components/GridTable'
 import {actions, TDataArr, TRow} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
-import {Moment} from 'moment'
+import moment, {Moment} from 'moment'
 
-export type TForDate = Date | Moment | null
+export type TForDate = Date | Moment | string | null
 
-export type DateInterval  = {
+export type DateInterval = {
   to: TForDate
-  after: TForDate
+  from: TForDate
 }
 
 type TProps = {
@@ -25,23 +25,27 @@ const App: FunctionalComponent<TProps> = ({setRow, setDataArr, dataArr,  row}) =
 
   const [dateFilter, setDateFilter] = useState<DateInterval>({
     to: null,
-    after: null
+    from: null
+  })
+
+  const readableDate = () => dataArr && dataArr.map(data => {
+    return Object.assign(data, {ctime: moment(data.ctime).format('YYYY-MM-DD HH:mm')})
   })
 
   useEffect(() => setDataArr(), [])
 
+  readableDate()
+
   const filteredData = useMemo(
     () => dataArr && dataArr.filter(({ctime}) => {
-      const date = new Date(ctime)
-      return (!dateFilter.to || date >= dateFilter.to)
-        && (!dateFilter.after || date <= dateFilter.after)
+      return (!dateFilter.from || ctime >= dateFilter.from)
+        && (!dateFilter.to || ctime <= dateFilter.to)
     }), [dataArr, dateFilter])
-
 
   return (
     <div class='app'>
       <div className='main-table'>
-        <FilterDate onChange={setDateFilter}/>
+        <FilterDate to={dateFilter.to} from={dateFilter.from} onChange={setDateFilter}/>
         {!!filteredData ? <GridTable dataArr={filteredData} selected={row} onRow={setRow}/> : 'Initializing'}
       </div>
       <div className='additional-table'>

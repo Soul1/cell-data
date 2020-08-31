@@ -1,5 +1,4 @@
-import {h, FunctionalComponent} from 'preact'
-import {useEffect, useState} from 'preact/hooks'
+import {h, FunctionalComponent, JSX} from 'preact'
 import {DateInterval, TForDate} from '../../App'
 import moment from 'moment'
 
@@ -7,42 +6,45 @@ import './index.scss'
 
 type TProps = {
   onChange: (interval: DateInterval) => void
+  to: TForDate
+  from: TForDate
 }
 
-const FilterDate: FunctionalComponent<TProps> = ({onChange}) => {
-  const [dateTo, setDateTo] = useState<TForDate>(null)
-  const [dateAfter, setDateAfter] = useState<TForDate>(null)
+const FilterDate: FunctionalComponent<TProps> = ({onChange, to, from}) => {
 
-  const lastWeekFilter = () => {
+  const lastWeekFilter = (e: JSX.TargetedEvent, weekNum: number) => {
+    e.preventDefault()
     onChange(
       {
-        to: moment().subtract(1, 'week').startOf('week').day(1),
-        after: moment().subtract(1, 'week').endOf('week').day(7)
+        from: moment(moment().subtract(weekNum, 'week').startOf('week').day(1)).format('YYYY-MM-DD') ,
+        to: moment(moment().subtract(weekNum, 'week').startOf('week').day(7)).format('YYYY-MM-DD')
       })
-    setDateTo(moment().subtract(1, 'week').startOf('week').day(1))
-    setDateAfter(moment().subtract(1, 'week').startOf('week').day(7))
   }
-
-  useEffect(() =>
-      onChange({to: dateTo, after: dateAfter}),
-    [dateTo, dateAfter]
-  )
 
   return (
     <div class='filter-date'>
-      <div className="filter-date__set">
-        <div className="filter-date__to">
+      <div className='filter-date__set'>
+        <div className='filter-date__to'>
           <b>От</b>
-          <input type="date" onChange={e => setDateTo(new Date(e.target.valueAsDate))} value={dateTo && moment(dateTo).format('YYYY-MM-DD')}/>
+          <input type='date'
+                 onChange={e => onChange({from: (e.target as HTMLInputElement).valueAsDate})}
+                 value={from && moment(from).format('YYYY-MM-DD')}/>
         </div>
-        <div className="filter-date__after">
+        <div className='filter-date__after'>
           <b>До</b>
-          <input type="date" onChange={e => setDateAfter(new Date(e.target.valueAsDate))} value={dateAfter && moment(dateAfter).format('YYYY-MM-DD')}/>
+          <input type='date'
+                 onChange={e => onChange({to: (e.target as HTMLInputElement).valueAsDate})}
+                 value={to && moment(to).format('YYYY-MM-DD')}/>
         </div>
       </div>
-      <div className="filter-date__frequently-used">
-        <div onClick={lastWeekFilter}>За прошлую неделю</div>
-      </div>
+      <ul className='filter-date__frequently-used'>
+        <li>
+          <a href='#' onClick={e => lastWeekFilter(e, 1)}>За прошлую неделю</a>
+        </li>
+        <li>
+          <a href='#' onClick={e => lastWeekFilter(e, 0)}>За текущую неделю</a>
+        </li>
+      </ul>
     </div>
   )
 }
