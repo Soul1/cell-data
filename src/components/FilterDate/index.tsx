@@ -1,5 +1,5 @@
 import {h, FunctionalComponent, JSX} from 'preact'
-import {DateInterval, TForDate} from '../../App'
+import {DateInterval, TForDate} from '../../types'
 import moment from 'moment'
 
 import './index.scss'

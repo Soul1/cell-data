@@ -2,17 +2,11 @@ import {h, FunctionalComponent} from 'preact'
 import {useEffect, useMemo, useState} from 'preact/hooks'
 import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
-import {actions, TDataArr, TRow} from './store'
+import {actions} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
-import moment, {Moment} from 'moment'
-
-export type TForDate = Date | Moment | string | null
-
-export type DateInterval = {
-  to: TForDate
-  from: TForDate
-}
+import moment from 'moment'
+import {DateInterval, TDataArr, TRow} from './types'
 
 type TProps = {
   setDataArr: () => void

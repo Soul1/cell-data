@@ -1,7 +1,7 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useRef, useState} from 'preact/hooks'
 import {Grid} from 'gridjs'
-import {TDataArr, TRow} from '../../store'
+import {TData, TDataArr, TDataNames, TRow} from '../../types'
 import cn from 'classnames'
 
 import 'gridjs/dist/theme/mermaid.min.css'
@@ -17,7 +17,7 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
   const wrapperRef = useRef(null)
   const [gridObj, setGridObj] = useState(null)
 
-  const dataName = {
+  const dataName: TDataNames = {
     svcId: '№',
     ctime: 'Дата',
     svcType: 'Тип',
@@ -26,17 +26,15 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
     comment: 'Комментарий'
   }
 
-  const renameKeys = (obj: any, newKeys: any) => {
-    const keyValues = Object.keys(obj).map(key => {
+  const renameKeys = (obj: TData, newKeys: TDataNames) => {
+    const keyValues = Object.keys(obj).map((key: keyof TDataNames) => {
       const newKey = newKeys[key] || key
       return { [newKey]: obj[key] }
     })
     return Object.assign({}, ...keyValues)
   }
 
-  const dataKeysRename = () => {
-    return dataArr.map(obj => renameKeys(obj, dataName))
-  }
+  const dataKeysRename = ():TDataArr => dataArr.map(obj => renameKeys(obj, dataName))
 
   useEffect(() => {
     const grid = new Grid({
@@ -63,7 +61,7 @@ const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
         ? <strong>{cell}</strong>
         : cell
 
-    const columns = Object.values(dataName).map((name) => ({name, formatter}));
+    const columns = Object.values(dataName).map((name: string) => ({name, formatter}))
 
     const className = {td: cn({'grid-td': dataArr.length})}
     

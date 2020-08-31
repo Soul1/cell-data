@@ -1,18 +1,5 @@
 import createStore from 'unistore'
-import Row from 'gridjs/dist/src/row'
-
-export type TRow = Row | null
-
-export type TData = {
-  svcId: number,
-  ctime: string,
-  svcType: string,
-  userName: string,
-  feedback: number,
-  comment: string
-}
-
-export type TDataArr = TData[] | null
+import {TRow} from '../types'
 
 export const actions = {
   setDataArr: async () => {
