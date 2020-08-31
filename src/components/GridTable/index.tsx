@@ -8,69 +8,51 @@ import 'gridjs/dist/theme/mermaid.min.css'
 import './index.scss'
 
 type TProps = {
-  dataArr: TDataArr
+  data: TDataArr
+  columnNames: {id: string, name: string}[]
   selected: TRow
   onRow: (row: TRow) => void
 }
 
-const GridTable: FunctionalComponent<TProps> = ({selected, dataArr, onRow}) => {
+const GridTable: FunctionalComponent<TProps> = ({data, columnNames, selected, onRow}) => {
   const wrapperRef = useRef(null)
   const [gridObj, setGridObj] = useState(null)
 
-  const dataName: TDataNames = {
-    svcId: '№',
-    ctime: 'Дата',
-    svcType: 'Тип',
-    userName: 'Оператор',
-    feedback: 'Оценка',
-    comment: 'Комментарий'
-  }
+  const config = () => {
+    const formatter = (cell: string, row: TRow) =>
+      selected && selected.cells[0].data === row.cells[0].data
+        ? <strong>{cell}</strong>
+        : cell
 
-  const renameKeys = (obj: TData, newKeys: TDataNames) => {
-    const keyValues = Object.keys(obj).map((key: keyof TDataNames) => {
-      const newKey = newKeys[key] || key
-      return { [newKey]: obj[key] }
-    })
-    return Object.assign({}, ...keyValues)
+    return {
+      data,
+      columns: columnNames.map((col) => ({formatter, ...col}))
+    }
   }
-
-  const dataKeysRename = ():TDataArr => dataArr.map(obj => renameKeys(obj, dataName))
 
   useEffect(() => {
     const grid = new Grid({
-      data: dataKeysRename(),
+      data,
       search: true,
       sort: true,
       language: {
         search: {
           placeholder: '🔍 Поиск...'
         }
-      },
-      className: {
-        td: cn({'grid-td': dataArr.length})
       }
-    }).render(wrapperRef.current)
+    })
+    grid.updateConfig(config())
+    grid.render(wrapperRef.current)
 
     grid.on('rowClick', (_, row) => onRow(row))
     setGridObj(grid)
   }, [])
 
-  useEffect(() => {
-    const formatter = (cell: string, row: TRow) =>
-      selected && selected.cells[0].data === row.cells[0].data
-        ? <strong>{cell}</strong>
-        : cell
-
-    const columns = Object.values(dataName).map((name: string) => ({name, formatter}))
-
-    const className = {td: cn({'grid-td': dataArr.length})}
-    
-    gridObj && gridObj.updateConfig({data: dataKeysRename(), columns, className}).forceRender()
-
-  }, [dataArr, selected])
+  useEffect(
+    () => gridObj && gridObj.updateConfig(config()).forceRender(),
+    [data, selected, columnNames])
 
   return <div ref={wrapperRef}/>
-
 }
 
 export default GridTable

@@ -36,11 +36,28 @@ const App: FunctionalComponent<TProps> = ({setRow, setDataArr, dataArr,  row}) =
         && (!dateFilter.to || ctime <= dateFilter.to)
     }), [dataArr, dateFilter])
 
+  const columnNames = [
+    {id: 'svcId',    name: '№'},
+    {id: 'ctime',    name: 'Дата'},
+    {id: 'svcType',  name: 'Тип'},
+    {id: 'userName', name: 'Оператор'},
+    {id: 'feedback', name: 'Оценка'},
+    {id: 'comment',  name: 'Комментарий'}
+  ]
+
   return (
     <div class='app'>
       <div className='main-table'>
         <FilterDate to={dateFilter.to} from={dateFilter.from} onChange={setDateFilter}/>
-        {!!filteredData ? <GridTable dataArr={filteredData} selected={row} onRow={setRow}/> : 'Initializing'}
+        {!!filteredData
+          ? <GridTable
+              columnNames={columnNames}
+              data={filteredData}
+              selected={row}
+              onRow={setRow}
+            />
+          : 'Initializing'
+        }
       </div>
       <div className='additional-table'>
         {!!row && <AdditionalTable row={row}/>}

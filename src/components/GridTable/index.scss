@@ -20,3 +20,13 @@ button {
     }
   }
 }
+
+.gridjs-tr:hover {
+  .gridjs-td:not(.gridjs-message) {
+    background-color: #bfffbf;
+  }
+}
+
+.gridjs-td:not(.gridjs-message) {
+  cursor: pointer;
+}
