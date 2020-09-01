@@ -1,40 +1,37 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useMemo, useState} from 'preact/hooks'
-import {connect} from 'unistore/preact'
 import GridTable from './components/GridTable'
-import {actions} from './store'
 import AdditionalTable from './components/AdditionalTable'
 import FilterDate from './components/FilterDate'
 import moment from 'moment'
 import {DateInterval, TDataArr, TRow} from './types'
 
-type TProps = {
-  setDataArr: () => void
-  setRow: (row: TRow) => void
-  dataArr: TDataArr
-  row: TRow
-}
+type TProps = {}
 
-const App: FunctionalComponent<TProps> = ({setRow, setDataArr, dataArr,  row}) => {
+const App: FunctionalComponent<TProps> = () => {
 
   const [dateFilter, setDateFilter] = useState<DateInterval>({
     to: null,
     from: null
   })
 
-  const readableDate = () => dataArr && dataArr.map(data => {
-    return Object.assign(data, {ctime: moment(data.ctime).format('YYYY-MM-DD HH:mm')})
-  })
+  const [data, setData] = useState<TDataArr>(null)
+  const [row, setRow] = useState<TRow>(null)
 
-  useEffect(() => setDataArr(), [])
+    const installDate = async (): void => {
+    const res = await fetch('/data.json')
+    const rows = await res.json()
+    rows.forEach((row: TData) => row.ctime = moment(row.ctime).format('YYYY-MM-DD HH:mm'))
+    setData(rows)
+  }
 
-  readableDate()
+  useEffect(installDate, [])
 
   const filteredData = useMemo(
-    () => dataArr && dataArr.filter(({ctime}) => {
+    () => data && data.filter(({ctime}) => {
       return (!dateFilter.from || ctime >= dateFilter.from)
         && (!dateFilter.to || ctime <= dateFilter.to)
-    }), [dataArr, dateFilter])
+    }), [data, dateFilter])
 
   const columnNames = [
     {id: 'svcId',    name: '№'},
@@ -66,4 +63,4 @@ const App: FunctionalComponent<TProps> = ({setRow, setDataArr, dataArr,  row}) =
   )
 }
 
-export default connect(['dataArr', 'row'], actions)(App)
+export default App
