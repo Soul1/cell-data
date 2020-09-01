@@ -1,5 +1,5 @@
 import Row from 'gridjs/dist/src/row'
-import {Moment} from "moment";
+import {Moment} from 'moment'
 
 export type TRow = Row | null
 
@@ -9,14 +9,6 @@ export type TData = {
   svcType: string,
   userName: string,
   feedback: number,
-  comment: string
-}
-export type TDataNames = {
-  svcId: string,
-  ctime: string,
-  svcType: string,
-  userName: string,
-  feedback: string,
   comment: string
 }
 

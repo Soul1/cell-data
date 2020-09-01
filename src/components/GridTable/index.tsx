@@ -1,20 +1,20 @@
 import {h, FunctionalComponent} from 'preact'
 import {useEffect, useRef, useState} from 'preact/hooks'
 import {Grid} from 'gridjs'
-import {TData, TDataArr, TDataNames, TRow} from '../../types'
-import cn from 'classnames'
+import {TDataArr, TRow} from '../../types'
 
 import 'gridjs/dist/theme/mermaid.min.css'
 import './index.scss'
 
 type TProps = {
   data: TDataArr
-  columnNames: {id: string, name: string}[]
+  columnNames: { id: string, name: string }[]
   selected: TRow
   onRow: (row: TRow) => void
 }
 
 const GridTable: FunctionalComponent<TProps> = ({data, columnNames, selected, onRow}) => {
+
   const wrapperRef = useRef(null)
   const [gridObj, setGridObj] = useState(null)
 
@@ -23,7 +23,6 @@ const GridTable: FunctionalComponent<TProps> = ({data, columnNames, selected, on
       selected && selected.cells[0].data === row.cells[0].data
         ? <strong>{cell}</strong>
         : cell
-
     return {
       data,
       columns: columnNames.map((col) => ({formatter, ...col}))
